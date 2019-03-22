@@ -5,7 +5,7 @@ from pyspark.ml.regression import LinearRegression
 spark = SparkSession.builder.appName('lr_example').getOrCreate()
 
 # Load training data
-training = spark.read.format("libsvm").load("sample_linear_regression_data.txt")
+training = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_linear_regression_data.txt")
 
 training.show()
 
@@ -32,10 +32,7 @@ print("RMSE: {}".format(trainingSummary.rootMeanSquaredError))
 print("r2: {}".format(trainingSummary.r2))
 
 # Train test split
-all_data = spark.read.format("libsvm").load("sample_linear_regression_data.txt")
-# Pass in the split between training/test as a list.
-# No correct, but generally 70/30 or 60/40 splits are used. 
-# Depending on how much data you have and how unbalanced it is.
+all_data = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_linear_regression_data.txt")
 train_data,test_data = all_data.randomSplit([0.7,0.3])
 train_data.show()
 test_data.show()
