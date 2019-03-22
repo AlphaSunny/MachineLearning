@@ -3,6 +3,9 @@ from pyspark.ml.regression import LinearRegression
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import VectorAssembler
 
+import platform 
+print(platform.python_version())
+
 spark = SparkSession.builder.appName('lr_example').getOrCreate()
 
 # Use Spark to read in the Ecommerce Customers csv file.
@@ -38,6 +41,7 @@ lr = LinearRegression(labelCol='Yearly Amount Spent')
 # Fit the model to the data and call this model lrModel
 lrModel = lr.fit(train_data)
 # Print the coefficients and intercept for linear regression
+print()
 print("Coefficients: {} Intercept: {}".format(lrModel.coefficients,lrModel.intercept))
 test_results = lrModel.evaluate(test_data)
 # Interesting results....
