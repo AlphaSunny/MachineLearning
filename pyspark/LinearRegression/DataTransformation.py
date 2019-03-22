@@ -5,7 +5,7 @@ from pyspark.ml.feature import VectorAssembler
 
 spark = SparkSession.builder.appName('data').getOrCreate()
 
-df = spark.read.csv('fake_customers.csv',inferSchema=True,header=True)
+df = spark.read.csv('./fake_customers.csv',inferSchema=True,header=True)
 
 df.show()
 
