@@ -1,19 +1,19 @@
 #Tree methods Example
 from pyspark.sql import SparkSession
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
 spark = SparkSession.builder.appName('dogfood').getOrCreate()
 
 # Load training data
-data = spark.read.csv('dog_food.csv',inferSchema=True,header=True)
+data = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/dog_food.csv',inferSchema=True,header=True)
 
 data.printSchema()
 
-data.head()
+print(data.head())
 
 data.describe().show()
 
-# Import VectorAssembler and Vectors
-from pyspark.ml.linalg import Vectors
-from pyspark.ml.feature import VectorAssembler
+
 
 assembler = VectorAssembler(inputCols=['A', 'B', 'C', 'D'],outputCol="features")
 
@@ -30,4 +30,7 @@ final_data.head()
 
 rfc_model = rfc.fit(final_data)
 
-rfc_model.featureImportances
+print("-----------------feature importance --------------------------------------")
+print(rfc_model.featureImportances)
+
+spark.stop()
