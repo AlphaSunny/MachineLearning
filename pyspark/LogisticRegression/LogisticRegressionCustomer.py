@@ -1,15 +1,17 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.classification import LogisticRegression
 
 spark = SparkSession.builder.appName('logregconsult').getOrCreate()
-data = spark.read.csv('customer_churn.csv',inferSchema=True,
+data = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/customer_churn.csv',inferSchema=True,
                      header=True)
 
 data.printSchema()
 
 # check out the data
 data.describe().show()
-from pyspark.ml.feature import VectorAssembler
+
 assembler = VectorAssembler(inputCols=['Age',
  'Total_Purchase',
  'Account_Manager',
@@ -19,7 +21,7 @@ assembler = VectorAssembler(inputCols=['Age',
 output = assembler.transform(data)
 final_data = output.select('features','churn')
 train_churn,test_churn = final_data.randomSplit([0.7,0.3])
-from pyspark.ml.classification import LogisticRegression
+
 lr_churn = LogisticRegression(labelCol='churn')
 fitted_churn_model = lr_churn.fit(train_churn)
 training_sum = fitted_churn_model.summary
@@ -38,3 +40,5 @@ test_new_customers = assembler.transform(new_customers)
 test_new_customers.printSchema()
 final_results = final_lr_model.transform(test_new_customers)
 final_results.select('Company','prediction').show()
+
+spark.stop()

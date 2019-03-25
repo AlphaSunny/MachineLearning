@@ -1,14 +1,13 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import (VectorAssembler,VectorIndexer,
                                 OneHotEncoder,StringIndexer)
-
 from pyspark.ml.classification import LogisticRegression
 from pyspark.ml import Pipeline
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 
 
 spark = SparkSession.builder.appName('myproj').getOrCreate()
-data = spark.read.csv('titanic.csv',inferSchema=True,header=True)
+data = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/titanic.csv',inferSchema=True,header=True)
 data.printSchema()
 
 my_cols = data.select(['Survived',

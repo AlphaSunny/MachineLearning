@@ -1,10 +1,10 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.classification import LogisticRegression
-
+from pyspark.mllib.evaluation import MulticlassMetrics
 spark = SparkSession.builder.appName('logregdoc').getOrCreate()
 
 # Load training data
-training = spark.read.format("libsvm").load("sample_libsvm_data.txt")
+training = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_libsvm_data.txt")
 
 lr = LogisticRegression()
 
@@ -14,8 +14,6 @@ lrModel = lr.fit(training)
 trainingSummary = lrModel.summary
 
 trainingSummary.predictions.show()
-# May change soon!
-from pyspark.mllib.evaluation import MulticlassMetrics
 
 lrModel.evaluate(training)
 
@@ -27,3 +25,5 @@ predictionAndLabels.predictions.show()
 predictionAndLabels = predictionAndLabels.predictions.select('label','prediction')
 
 predictionAndLabels.show()
+
+spark.stop()
