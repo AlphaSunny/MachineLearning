@@ -44,5 +44,5 @@ my_eval = BinaryClassificationEvaluator(rawPredictionCol='prediction',
                                        labelCol='Survived')
 results.select('Survived','prediction').show()
 AUC = my_eval.evaluate(results)
-print("AUC" + AUC)
+print("AUC" +  str(AUC))
 spark.stop()

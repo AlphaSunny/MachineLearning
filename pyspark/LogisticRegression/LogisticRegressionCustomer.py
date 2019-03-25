@@ -33,7 +33,7 @@ churn_eval = BinaryClassificationEvaluator(rawPredictionCol='prediction',
                                            labelCol='churn')
 auc = churn_eval.evaluate(pred_and_labels.predictions)
 final_lr_model = lr_churn.fit(final_data)
-new_customers = spark.read.csv('new_customers.csv',inferSchema=True,
+new_customers = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/new_customers.csv',inferSchema=True,
                               header=True)
 new_customers.printSchema()
 test_new_customers = assembler.transform(new_customers)
