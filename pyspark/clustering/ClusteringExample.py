@@ -1,11 +1,9 @@
-#Cluster methods Example
 from pyspark.sql import SparkSession
+from pyspark.ml.clustering import KMeans
 spark = SparkSession.builder.appName('cluster').getOrCreate()
 
-from pyspark.ml.clustering import KMeans
-
 # Loads data.
-dataset = spark.read.format("libsvm").load("sample_kmeans_data.txt")
+dataset = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_kmeans_data.txt")
 
 # Trains a k-means model.
 kmeans = KMeans().setK(2).setSeed(1)

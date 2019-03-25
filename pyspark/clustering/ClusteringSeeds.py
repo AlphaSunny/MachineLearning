@@ -1,20 +1,18 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import VectorAssembler
-spark = SparkSession.builder.appName('cluster').getOrCreate()
-
+from pyspark.ml.feature import StandardScaler
 from pyspark.ml.clustering import KMeans
 
+spark = SparkSession.builder.appName('cluster').getOrCreate()
 # Loads data.
-dataset = spark.read.csv("seeds_dataset.csv",header=True,inferSchema=True)
+dataset = spark.read.csv("hdfs:///user/maria_dev/MachineLearning/seeds_dataset.csv",header=True,inferSchema=True)
 
-dataset.head()
+print(dataset.head())
 dataset.describe().show()
 vec_assembler = VectorAssembler(inputCols = dataset.columns, outputCol='features')
 final_data = vec_assembler.transform(dataset)
 
-# Scale the data
-from pyspark.ml.feature import StandardScaler
 scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures", withStd=True, withMean=False)
 
 # Compute summary statistics by fitting the StandardScaler

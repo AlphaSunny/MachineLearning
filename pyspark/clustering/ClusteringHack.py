@@ -1,12 +1,12 @@
 from pyspark.sql import SparkSession
-spark = SparkSession.builder.appName('hack_find').getOrCreate()
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import StandardScaler
-
-# Loads data.
-dataset = spark.read.csv("hack_data.csv",header=True,inferSchema=True)
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import VectorAssembler
+
+spark = SparkSession.builder.appName('hack_find').getOrCreate()
+# Loads data
+dataset = spark.read.csv("hdfs:///user/maria_dev/MachineLearning/hack_data.csv",header=True,inferSchema=True)
 
 feat_cols = ['Session_Connection_Time', 'Bytes Transferred', 'Kali_Trace_Used',
              'Servers_Corrupted', 'Pages_Corrupted','WPM_Typing_Speed']
