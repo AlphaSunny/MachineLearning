@@ -10,16 +10,15 @@ spark = SparkSession.builder.appName('rf').getOrCreate()
 
 # Load and parse the data file, converting it to a DataFrame.
 data = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_libsvm_data.txt")
-
 print("---------------------------------------------------show the data---------------------------------------------------")
 data.head()
 
 # Split the data into training and test sets (30% held out for testing)
 (trainingData, testData) = data.randomSplit([0.7, 0.3])
-
 trainingData.printSchema()
 
 # Train model.  This also runs the indexers.
+rf = RandomForestClassifier(labelCol="label", featuresCol="features" , numTrees =20)
 model = rf.fit(trainingData)
 
 # Make predictions.
