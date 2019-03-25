@@ -23,16 +23,16 @@ lr = LinearRegression(featuresCol='features', labelCol='label', predictionCol='p
 lrModel = lr.fit(training)
 
 # Print the coefficients and intercept for linear regression
-print("Coefficients: {0:x}".format(str(lrModel.coefficients))) # For each feature...
+print("Coefficients: " + str(lrModel.coefficients)) # For each feature...
 print('\n')
-print("Intercept:{0:x}".format(str(lrModel.intercept)))
+print("Intercept: " + str(lrModel.intercept))
 
 # Summarize the model over the training set and print out some metrics
 trainingSummary = lrModel.summary
 
 trainingSummary.residuals.show()
-print("RMSE: {0:x}".format(trainingSummary.rootMeanSquaredError))
-print("r2: {0:x}".format(trainingSummary.r2))
+print("RMSE: " + trainingSummary.rootMeanSquaredError)
+print("r2: " + trainingSummary.r2)
 
 # Train test split
 all_data = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_linear_regression_data.txt")
@@ -44,6 +44,6 @@ unlabeled_data.show()
 correct_model = lr.fit(train_data)
 test_results = correct_model.evaluate(test_data)
 test_results.residuals.show()
-print("RMSE: {0:x}".format(test_results.rootMeanSquaredError))
+print("RMSE " + test_results.rootMeanSquaredError)
 predictions = correct_model.transform(unlabeled_data)
 predictions.show()
