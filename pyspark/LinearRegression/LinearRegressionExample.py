@@ -1,5 +1,8 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.regression import LinearRegression
+from pyspark import __version__
+
+print(__version__)
 
 
 spark = SparkSession.builder.appName('lr_example').getOrCreate()

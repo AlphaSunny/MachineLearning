@@ -6,10 +6,11 @@ from pyspark.ml.feature import VectorAssembler
 spark = SparkSession.builder.appName('data').getOrCreate()
 
 df = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/fake_customers.csv',inferSchema=True,header=True)
+df.show()
+
 df = spark.createDataFrame(
     [(0, "a"), (1, "b"), (2, "c"), (3, "a"), (4, "a"), (5, "c")],
     ["user_id", "category"])
-
 df.show()
 
 indexer = StringIndexer(inputCol="category", outputCol="categoryIndex")
