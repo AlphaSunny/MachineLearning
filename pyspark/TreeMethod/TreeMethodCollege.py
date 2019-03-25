@@ -1,9 +1,16 @@
 #Tree methods Example
 from pyspark.sql import SparkSession
+from pyspark.ml.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.classification import DecisionTreeClassifier,GBTClassifier,RandomForestClassifier
+from pyspark.ml import Pipeline
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
 spark = SparkSession.builder.appName('treecode').getOrCreate()
 
 # Load training data
-data = spark.read.csv('College.csv',inferSchema=True,header=True)
+data = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/College.csv',inferSchema=True,header=True)
 
 data.printSchema()
 
@@ -14,9 +21,6 @@ data.head()
 # ("label","features")
 
 # Import VectorAssembler and Vectors
-from pyspark.ml.linalg import Vectors
-from pyspark.ml.feature import VectorAssembler
-
 assembler = VectorAssembler(
   inputCols=['Apps',
              'Accept',
@@ -38,7 +42,6 @@ assembler = VectorAssembler(
               outputCol="features")
 
 output = assembler.transform(data)
-from pyspark.ml.feature import StringIndexer
 
 indexer = StringIndexer(inputCol="Private", outputCol="PrivateIndex")
 output_fixed = indexer.fit(output).transform(output)
@@ -47,8 +50,7 @@ final_data = output_fixed.select("features",'PrivateIndex')
 train_data,test_data = final_data.randomSplit([0.7,0.3])
 
 
-from pyspark.ml.classification import DecisionTreeClassifier,GBTClassifier,RandomForestClassifier
-from pyspark.ml import Pipeline
+
 # Use mostly defaults to make this comparison "fair"
 
 dtc = DecisionTreeClassifier(labelCol='PrivateIndex',featuresCol='features')
@@ -66,7 +68,6 @@ rfc_predictions = rfc_model.transform(test_data)
 gbt_predictions = gbt_model.transform(test_data)
 
 
-from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
 # Select (prediction, true label) and compute test error
 acc_evaluator = MulticlassClassificationEvaluator(labelCol="PrivateIndex", predictionCol="prediction", metricName="accuracy")
