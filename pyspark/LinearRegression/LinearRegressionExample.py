@@ -10,7 +10,7 @@ spark = SparkSession.builder.appName('lr_example').getOrCreate()
 # Load training data
 training = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_linear_regression_data.txt")
 
-training.show()
+training.show(truncate= False)
 
 # These are the default values for the featuresCol, labelCol, predictionCol
 lr = LinearRegression(featuresCol='features', labelCol='label', predictionCol='prediction')
