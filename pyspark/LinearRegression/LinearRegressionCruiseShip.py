@@ -6,13 +6,14 @@ from pyspark.sql.functions import corr
 
 spark = SparkSession.builder.appName('cruise').getOrCreate()
 df = spark.read.csv('hdfs:///user/maria_dev/MachineLearning/cruise_ship_info.csv',inferSchema=True,header=True)
-df.printSchema()
-df.show()
-df.describe().show()
+
+print("------------------------------------------Cruise line information------------------------------------------")
 df.groupBy('Cruise_line').count().show()
 indexer = StringIndexer(inputCol="Cruise_line", outputCol="cruise_cat")
 indexed = indexer.fit(df).transform(df)
-indexed.head(5)
+
+
+# get the features column
 assembler = VectorAssembler(
   inputCols=['Age',
              'Tonnage',
@@ -27,18 +28,21 @@ output = assembler.transform(indexed)
 output.select("features", "crew").show()
 final_data = output.select("features", "crew")
 train_data,test_data = final_data.randomSplit([0.7,0.3])
+
 # Create a Linear Regression Model object
 lr = LinearRegression(labelCol='crew')
+
 # Fit the model to the data and call this model lrModel
 lrModel = lr.fit(train_data)
+
 # Print the coefficients and intercept for linear regression
-print("Coefficients: " + lrModel.coefficients)
-print("Intercept:  " + lrModel.intercept)
+print("Coefficients: " + str(lrModel.coefficients))
+print("Intercept:  " + str(lrModel.intercept))
 
 test_results = lrModel.evaluate(test_data)
-print("RMSE: {}".format(test_results.rootMeanSquaredError))
-print("MSE: {}".format(test_results.meanSquaredError))
-print("R2: {}".format(test_results.r2))
+print("RMSE: "+ str(test_results.rootMeanSquaredError))
+print("MSE: " + str(test_results.meanSquaredError))
+print("R2: " + str(test_results.r2))
 # R2 of 0.86 is pretty good, let's check the data a little closer
 
 df.select(corr('crew','passengers')).show()
