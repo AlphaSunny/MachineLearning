@@ -31,8 +31,8 @@ print("Intercept: " + str(lrModel.intercept))
 trainingSummary = lrModel.summary
 
 trainingSummary.residuals.show()
-print("RMSE: " + trainingSummary.rootMeanSquaredError)
-print("r2: " + trainingSummary.r2)
+print("RMSE: " + str(trainingSummary.rootMeanSquaredError))
+print("r2: " + str(trainingSummary.r2))
 
 # Train test split
 all_data = spark.read.format("libsvm").load("hdfs:///user/maria_dev/MachineLearning/sample_linear_regression_data.txt")
@@ -44,6 +44,6 @@ unlabeled_data.show()
 correct_model = lr.fit(train_data)
 test_results = correct_model.evaluate(test_data)
 test_results.residuals.show()
-print("RMSE " + test_results.rootMeanSquaredError)
+print("RMSE " + str(test_results.rootMeanSquaredError))
 predictions = correct_model.transform(unlabeled_data)
 predictions.show()
