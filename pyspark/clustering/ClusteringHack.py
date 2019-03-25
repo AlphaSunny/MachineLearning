@@ -39,7 +39,7 @@ for k in range(2,9):
     kmeans = KMeans(featuresCol='scaledFeatures',k=k)
     model = kmeans.fit(cluster_final_data)
     wssse = model.computeCost(cluster_final_data)
-    print("With K={}".format(k))
+    print("With K = " + str(k))
     print("Within Set Sum of Squared Errors = " + str(wssse))
     print('--'*30)
 
